@@ -17,7 +17,7 @@ client = OpenAI()
 
 @app.route('/get_trending_stocks')
 def get_trending_stocks():
-    try:
+    def get_dct():
         response = requests.post(
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
@@ -48,8 +48,19 @@ def get_trending_stocks():
             ticker5 = dspy.OutputField(desc="The fifth company ticker or N/A if not mentioned")
         stock_derive = dspy.Predict(DeriveStocks)
         answer = stock_derive(message=text)
+        dct = answer.toDict()
+        return dct
+    try:
+        retries = 0
+        cond = False
+        while retries < 5 and not cond:
+            dct = get_dct()
+            if "N/A" in dct.values():
+                retries += 1
+            else:
+                cond = True
         response = app.response_class(
-            response=json.dumps(answer.toDict()),
+            response=json.dumps(dct),
             status=200,
             mimetype='application/json'
         )
