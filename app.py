@@ -26,7 +26,7 @@ def get_trending_stocks():
             data=json.dumps({
                 "model": "perplexity/sonar-small-chat", # Optional
                 "messages": [
-                {"role": "user", "content": "List 5 U.S stocks (and their tickers) outside of the top 20 that are trending today. They must be valid stocks."}
+                {"role": "user", "content": "List 5 U.S stocks (both company name and their tickers) outside of the top 20 that are trending today. They must be valid stocks."}
                 ]
             })
         )
